@@ -23,40 +23,44 @@ public class Scraper {
         
         try {
             // Carga el archivo HTML estático localmente
-            File input = new File("index.html");
-            Document doc = Jsoup.parse(input, "UTF-8", ""); 
+            Document doc = Jsoup.connect("https://quotes.toscrape.com/").get();
+
             
             System.out.println("Documento HTML cargado. Iniciando el scraping (Extracción de datos)...");
             
             // 2. Seleccionar todos los contenedores de producto
-            Elements productos = doc.select(".producto"); 
+            Elements elementos = doc.select(".quote");
+
             
             // ----------------------------------------------------
             // FASE 2: Preprocesamiento (Extracción y Limpieza)
             // Tareas del Alumno: Completar la lógica de extracción y limpieza.
             // ----------------------------------------------------
             
-            for (Element producto : productos) {
+            for (Element producto : elementos) {
                 
                 // Tarea A: Extraer el título
-                String titulo = producto.select(".titulo-producto").text();
+                String campo1 = producto.select(".text").text();
+
                 
                 // Tarea B: Extraer el precio como texto
-                String precioTexto = producto.select(".precio").text();
+                String campo2 = producto.select(".author").text();
+
                 
                 // Tarea C: Limpieza del Dato (EL ALUMNO COMPLETA ESTA LÓGICA)
-                String precioLimpio = precioTexto;
+                //String precioLimpio = precioTexto;
                 
                 // ----------------------------------------------------------------------------------
                 //  *** CÓDIGO A COMPLETAR POR EL ALUMNO (SOLUCIÓN DEL PROFESOR ABAJO) ***
                 //  1. Eliminar el símbolo de moneda (" €")
                 //  2. Reemplazar la coma decimal por un punto decimal (para ser compatible con CSV/Números)
-                precioLimpio = precioLimpio.replace(" €", "").replace(",", "."); 
+                //precioLimpio = precioLimpio.replace(" €", "").replace(",", "."); 
                 //  (Opcional: Filtrar precios obviamente erróneos si deseas añadir un reto de limpieza)
                 // ----------------------------------------------------------------------------------
                 
                 // 3. Estructurar el dato: Añadir al StringBuilder en formato CSV
-                csvData.append(titulo).append(";").append(precioLimpio).append("\n");
+                csvData.append(campo1).append(";").append(campo2).append("\n");
+
             }
             
             // ----------------------------------------------------
